@@ -78,7 +78,7 @@ describe('GET /todos', () => {
   });
 });
 
-describe('Get /todos/:id', () => {
+describe('GET /todos/:id', () => {
   it('Should return todo doc', done => {
     request(app)
       .get(`/todos/${todos[0]._id.toHexString()}`)
@@ -96,5 +96,41 @@ describe('Get /todos/:id', () => {
 
   it('Should return 404 for non-object id', done => {
     request(app).get('/todos/123dkeor').expect(404).end(done);
+  });
+});
+
+describe('DELETE /todos:id', () => {
+  it('should remove a todo', done => {
+    var hexId = todos[1]._id.toHexString();
+
+    request(app)
+      .delete(`/todos/${hexId}`)
+      .expect(200)
+      .expect(res => {
+        expect(res.body.todo._id).toBe(hexId);
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+
+        Todo.findById(hexId)
+          .then(todo => {
+            expect(todo).toNotExist();
+            return done();
+          })
+          .catch(err => {
+            return done(err);
+          });
+      });
+  });
+  it('should return 404 if todo not found', done => {
+    var hexId = new ObjectID().toHexString();
+
+    request(app).delete(`/todos/${hexId}`).expect(404).end(done);
+  });
+
+  it('should return 404 if ofjectid is not valid', done => {
+    request(app).delete('/todos/1234j2ldkg').expect(404).end(done);
   });
 });
