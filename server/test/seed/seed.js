@@ -14,27 +14,39 @@ const users = [
     tokens: [
       {
         access: 'auth',
-        token: jwt.sign({ access: 'auth', _id: useroneId }, 'abc123').toString()
+        token: jwt
+          .sign({ access: 'auth', _id: useroneId }, process.env.JWT_SECRET)
+          .toString()
       }
     ]
   },
   {
     _id: usertwoId,
     email: 'hide@gmail.com',
-    password: 'usertwopass'
+    password: 'usertwopass',
+    tokens: [
+      {
+        access: 'auth',
+        token: jwt
+          .sign({ access: 'auth', _id: usertwoId }, process.env.JWT_SECRET)
+          .toString()
+      }
+    ]
   }
 ];
 
 const todos = [
   {
     _id: new ObjectID(),
-    text: 'first todo'
+    text: 'first todo',
+    _creator: useroneId
   },
   {
     _id: new ObjectID(),
     text: 'second todo',
     completed: true,
-    completedAt: 333
+    completedAt: 333,
+    _creator: usertwoId
   }
 ];
 

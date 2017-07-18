@@ -14,11 +14,11 @@ var Todo = mongoose.model('Todo', {
   completedAt: {
     type: Number,
     default: null
+  },
+  _creator: {
+    required: true,
+    type: mongoose.Schema.Types.ObjectId
   }
-});
-
-var newTodo = new Todo({
-  text: 'Edit this video'
 });
 
 module.exports = {
